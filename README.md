@@ -1,48 +1,51 @@
-**SKS National Bank Database Project**
-Project Overview
+# 🏦 SKS National Bank Database Project
 
-This project implements a relational database for a fictional bank called SKS National Bank. It includes tables for branches, employees, customers, accounts, loans, and their relationships. The database also contains stored procedures for common operations like transfers and loan payments.
+## 📘 Project Overview
 
-**Group Members**
-Mark Angel Castro
-Jeshua Arias Santos
-Derek Carlos
+This project implements a **relational database** for a fictional financial institution — **SKS National Bank**.
+The system models the core structure and operations of a real-world bank, including data for branches, employees, customers, accounts, and loans.
 
-**The project contains 13 tables:**
-Branch
-Location
-Employee
-EmployeeLocation
-Customer
-CustomerEmployee
-Account
-SavingsAccount
-ChequingOverdraft
-AccountHolder
-Loan
-LoanHolder
-LoanPayment
+The database is fully normalized and includes stored procedures for key operations such as **fund transfers**, **loan payments**, and **account queries**.
+
+---
+ Group Members
+
+* **Mark Angel Castro**
+* **Jeshua Arias Santos**
+* **Derek Carlos**
+
+---
+ Database Design Summary
+
+The database design is based on the approved **Entity Relationship Diagram (ERD)** for SKS National Bank.
+It includes **13 core tables** representing entities and relationships between them.
+
+ **Main Tables**
+
+1. **Branch** – Stores branch details, address, total deposits, and loans.
+2. **Location** – Represents physical or non-branch locations.
+3. **Employee** – Contains employee information, including start date, manager, and assigned branch.
+4. **EmployeeLocation** – Junction table linking employees and locations (M:N).
+5. **Customer** – Represents bank clients.
+6. **CustomerEmployee** – Junction table linking customers to their assigned employees (M:N).
+7. **Account** – Base table for both savings and chequing accounts.
+8. **SavingsAccount** – Subtype of Account, includes `InterestRate`.
+9. **ChequingOverdraft** – Subtype of Account, includes `OverdraftLimit`.
+10. **AccountHolder** – Junction table linking customers and accounts (M:N).
+11. **Loan** – Represents loans issued by the bank.
+12. **LoanHolder** – Junction table linking customers and loans (M:N).
+13. **LoanPayment** – Tracks payments made toward each loan.
+
+---
 
 
-**Files Included**
-create_database.sql — SQL script to create the database and all tables.
-populate_database.sql — SQL script to insert sample data into all tables.
-prepared_queries.sql — Stored procedures for queries, transactions, and reports.
+## ✅ Conclusion
 
-**How to Run**
-Open MySQL (or MySQL Workbench).
-Execute create_database.sql to create the database and tables.
-Execute populate_database.sql to insert sample data.
-Execute prepared_queries.sql to create stored procedures.
-Use the procedures for testing or querying the database.
+The SKS National Bank Database provides a normalized, relational structure suitable for managing banking data and operations.
+It supports scalability, integrity, and real-world functionality aligned with the requirements of the case study.
 
-**Sample Queries / Procedures**
-GetCustomerAccounts(customer_id) — List all accounts of a customer.
-TransferBetweenAccounts(from_account, to_account, amount) — Transfer funds safely.
-AddLoanPayment(loan_id, payment_number, payment_date, amount) — Add loan payments.
+**Database System:** MySQL
 
-Notes
-
-Branch totals (total_deposits, total_loans) are stored for simplicity.
-Employee hierarchy is modeled with manager_id.
-Database enforces transactional safety for financial operations.
+**Prepared by:**
+*Group K – BVC Technology Group*
+*Database Design and Implementation Project*
