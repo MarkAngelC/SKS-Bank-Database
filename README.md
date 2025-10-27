@@ -1,6 +1,6 @@
-# 🏦 SKS National Bank Database Project
+SKS National Bank Database Project
 
-## 📘 Project Overview
+ Project Overview
 
 This project implements a **relational database** for a fictional financial institution — **SKS National Bank**.
 The system models the core structure and operations of a real-world bank, including data for branches, employees, customers, accounts, and loans.
