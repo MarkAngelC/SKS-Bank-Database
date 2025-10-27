@@ -1,103 +1,71 @@
-USE SKS_NationalBank;
+USE SKSNationalBankDB;
+GO
 
-	SET IDENTITY_INSERT Branch ON;
 
-INSERT INTO Branch(BranchID, BranchName, City, TotalDeposits, TotalLoans) VALUES
-(1, 'Calgary Financial Centre', 'Calgary', 100, 100),
-(2, '17th Ave. Se & Radisson', 'Calgary', 42, 37),
-(3, 'The Meadows', 'Edmonton', 67, 21),
-(4, 'West Lethbridge', 'Lethbridge', 82, 76),
-(5, 'Timberlands', 'Red Deer', 35, 28);
+--Address Populate
+INSERT INTO Address (address_id, street, city, province) VALUES
+(1, '414 3 St SW', 'Calgary', 'AB'),
+(2, '8500 Macleod Trail SE', 'Calgary', 'AB'),
+(3, '407 2 Street SW', 'Calgary', 'AB'),
+(4, '939 General Ave NE', 'Calgary', 'AB'),
+(5, '10 Copperstone St SE', 'Calgary', 'AB');
+GO
 
-	SET IDENTITY_INSERT Branch OFF;
+--Branch Populate
+INSERT INTO Branch (branch_id, branch_name, address_id, total_deposit, total_loans) VALUES
+('B001', 'Calgary Financial Centre', 1, 100, 100),
+('B002', '17th Ave. SE & Radisson', 2, 42, 37),
+('B003', 'The Meadows', 3, 67, 21),
+('B004', 'West Lethbridge', 4, 82, 76),
+('B005', 'Timberlands', 5, 35, 28);
+GO
 
-	SET IDENTITY_INSERT Employee ON;
+--Employee 
+INSERT INTO Employee (employee_id, first_name, last_name, start_date, manager_id, branch_id) VALUES
+(1, 'Liam', 'Morales', '2021-10-04', NULL, 'B001'),
+(2, 'Camila', 'Kelly', '2017-05-06', 1, 'B001'),
+(3, 'Gabriel', 'Allen', '2015-09-01', 1, 'B002'),
+(4, 'Quinn', 'Young', '2020-03-27', 3, 'B004'),
+(5, 'Lydia', 'Parker', '2023-11-14', 2, 'B003');
+GO
 
-INSERT INTO Employee(EmployeeID, FullName, HomeAddress, StartDate, ManagerID) VALUES
-(1, 'Liam Morales', '414 3 St SW #203, Calgary, AB T2P 1R2, Canada', '2021-10-04 13:51:00', 1),
-(2, 'Camila Kelly', '8500 Macleod Trail SE #232, Calgary, AB T2H 2N1, Canada', '2017-05-06 13:51:00', 2),
-(3, 'Gabriel Allen', '407 2 Street Southwest, Calgary, AB T2P 2Y3, Canada', '2015-09-01 13:51:00', 1),
-(4, 'Quinn Young', '939 General Ave NE, Calgary, AB T2E 9E1, Canada', '2020-03-27 13:51:00', 3),
-(5, 'Lydia Parker', '10 Copperstone St SE unit 119, Calgary, AB T2Z 0V4, Canada', '2023-11-14 13:51:00', 2);
+--Account Type
+INSERT INTO AccountType (account_type_id, type) VALUES
+(1, 'Chequing'),
+(2, 'Savings');
+GO
 
-	SET IDENTITY_INSERT Employee OFF;
+--Account
 
-	SET IDENTITY_INSERT Location ON;
+INSERT INTO Account (account_id, account_type_id, balance, open_date) VALUES
+(1, 2, 6000.00, '2025-05-06'),
+(2, 1, 1570.76, '2025-09-28'),
+(3, 2, 2367.98, '2025-01-26'),
+(4, 1, 578.21, '2025-08-24'),
+(5, 1, 121.67, '2025-10-16'),
+(6, 2, 12167.24, '2024-12-28'),
+(7, 1, 2367.21, '2025-07-11'),
+(8, 2, 514.59, '2025-10-04'),
+(9, 1, 897.24, '2025-06-17'),
+(10, 2, 2213.67, '2025-04-20');
+GO
 
-INSERT INTO Location (LocationID, LocationName, IsBranch) VALUES
-(1, 'Calgary Financial Centre', 1),
-(2, 'CF Chinook Centre', 0),
-(3, 'Timberlands', 1),
-(4, 'West Lethbridge', 1),
-(5, 'West Edmonton Mall', 0);
+--Customer
+INSERT INTO Customer (customer_id, first_name, last_name, address_id) VALUES
+(1, 'Liam', 'Morales', 1),
+(2, 'Delphine', 'Crona', 2),
+(3, 'Gunnar', 'Padberg', 3),
+(4, 'Emil', 'Sauer', 4),
+(5, 'Brendan', 'Bartell', 5),
+(6, 'Isabell', 'Schmidt', 1),
+(7, 'Ottis', 'Heidenreich', 2),
+(8, 'Oswald', 'Mante', 3),
+(9, 'Monica', 'Koelpin', 4),
+(10, 'Dean', 'Grady', 5);
+GO
 
-	SET IDENTITY_INSERT Location OFF;
-
-INSERT INTO EmployeeLocation (EmployeeID, LocationID) VALUES
-(1, 1),
-(2, 5),
-(3, 1),
-(4, 4),
-(5, 2);
-
-	SET IDENTITY_INSERT Customer ON;
-
-INSERT INTO Customer(CustomerID, FullName, HomeAddress) VALUES
-(1, 'Liam Morales', '414 3 St SW #203, Calgary, AB T2P 1R2, Canada'),
-(2, 'Delphine Crona', 'Suite C-7070 Farrell Rd SE, Calgary, AB T2H 0T2, Canada'),
-(3, 'Gunnar Padberg', '1717 10 St NW Suite 300, Calgary, AB T2M 4S2, Canada'),
-(4, 'Emil Sauer', '602 12 Ave SW Suite 910, Calgary, AB T2R 1J3, Canada'),
-(5, 'Brendan Bartell', '405-999 8 St SW, Calgary, AB T2R 1J5, Canada'),
-(6, 'Isabell Schmidt', '565 36 St NE, Calgary, AB T2A 6K3, Canada'),
-(7, 'Ottis Heidenreich', '10655 Southport Rd SW Suite B1, Calgary, AB T2W 4Y1, Canada'),
-(8, 'Oswald Mante', '880 16 Ave SW, Calgary, AB T2R 0S9, Canada'),
-(9, 'Monica Koelpin', '10401 Braeside Dr SW, Calgary, AB T2W 1B5, Canada'),
-(10, 'Dean Grady', '1130 12 St SW, Calgary, AB T3C 1A7, Canada');
-
-	SET IDENTITY_INSERT Customer OFF;
-
-	SET IDENTITY_INSERT Account ON;
-
-INSERT INTO Account(AccountID, AccountType, Balance, LastAccessed) VALUES
-(1, 'Savings', 6000.00, '2025-05-06 13:51:00'),
-(2, 'Chequing', 1570.76, '2025-09-28 13:51:00'),
-(3, 'Savings', 2367.98, '2025-01-26 13:51:00'),
-(4, 'Chequing', 578.21, '2025-08-24 13:51:00'),
-(5, 'Chequing', 121.67, '2025-10-16 13:51:00'),
-(6, 'Savings', 12167.24, '2024-12-28 13:51:00'),
-(7, 'Chequing', 2367.21,'2025-07-11 13:51:00'),
-(8, 'Savings', 514.59, '2025-10-04 13:51:00'),
-(9, 'Chequing', 897.24, '2025-06-17 13:51:00'),
-(10, 'Savings', 2213.67, '2025-04-20 13:51:00');
-
-	SET IDENTITY_INSERT Account OFF;
-
-INSERT INTO SavingsAccount (AccountID, InterestRate) VALUES
-(1, 2.65),
-(3, 4.95),
-(6, 3.50),
-(8, 4.70),
-(10, 1.45);
-
-INSERT INTO ChequingAccount (AccountID) VALUES
-(2),
-(4),
-(5),
-(7),
-(9);
-
-	SET IDENTITY_INSERT Overdraft ON;
-
-INSERT INTO Overdraft (OverdraftID, AccountID, OverdraftDate, Amount, CheckNumber) VALUES
-(1, 2, '2025-03-21 13:51:00', 385.12, 3),
-(2, 4, '2025-02-14 13:51:00', 764.12, 1),
-(3, 5, '2025-08-17 13:51:00', 546.93, 2),
-(4, 7, '2025-09-21 13:51:00', 1420.64, 1),
-(5, 9, '2025-10-08 13:51:00', 221.49, 2);
-
-	SET IDENTITY_INSERT Overdraft OFF;
-
-INSERT INTO CustomerAccount (CustomerID, AccountID) VALUES
+--CustomerAccount
+INSERT INTO CustomerAccount (customer_id, account_id) VALUES
 (1, 1),
 (2, 2),
 (3, 4),
@@ -108,28 +76,73 @@ INSERT INTO CustomerAccount (CustomerID, AccountID) VALUES
 (8, 9),
 (9, 7),
 (10, 3);
+GO
 
-	SET IDENTITY_INSERT Loan ON;
 
-INSERT INTO Loan (LoanID, BranchID, LoanAmount) VALUES
-(1, 5, 1671.89),
-(2, 3, 934.78),
-(3, 3, 1876.21),
-(4, 2, 1250.00),
-(5, 1, 3000.00);
+-- SavingsAccount
+INSERT INTO SavingsAccount (account_id, interest_rate) VALUES
+(1, 2.65),
+(3, 4.95),
+(6, 3.50),
+(8, 4.70),
+(10, 1.45);
+GO
 
-	SET IDENTITY_INSERT Loan OFF;
 
-INSERT INTO CustomerLoan (CustomerID, LoanID) VALUES
-(1, 2),
+-- ChequingAccount
+INSERT INTO ChequingAccount (account_id, overdraft_limit) VALUES
+(2, 385.12),
+(4, 764.12),
+(5, 546.93),
+(7, 1420.64),
+(9, 221.49);
+GO
+
+
+-- Loan
+INSERT INTO Loan (loan_id, amount, interest_rate, start_date, end_date, account_id) VALUES
+(1, 1671.89, 3.5, '2025-01-01', '2025-12-31', 1),
+(2, 934.78, 4.0, '2025-03-01', '2025-09-30', 3),
+(3, 1876.21, 2.9, '2025-02-15', '2025-10-15', 6),
+(4, 1250.00, 3.2, '2025-04-01', '2025-11-01', 8),
+(5, 3000.00, 5.0, '2025-05-01', '2026-05-01', 10);
+GO
+
+
+-- LoanHolder
+INSERT INTO LoanHolder (loan_id, customer_id) VALUES
+(1, 9),
+(2, 1),
 (3, 3),
-(6, 5),
-(7, 4),
-(9, 1);
+(4, 7),
+(5, 6);
+GO
 
-INSERT INTO LoanPayment (LoanID, PaymentNumber, PaymentDate, Amount) VALUES
-(1, 2, '2025-08-20 13:51:00', 267.21),
-(2, 3, '2025-09-21 13:51:00', 360.50),
-(3, 5, '2025-10-12 13:51:00', 678.23),
-(4, 4, '2025-08-07 13:51:00', 333.33),
-(5, 1, '2025-04-20 13:51:00', 2567.67);
+
+-- LoanPayment
+INSERT INTO LoanPayment (loan_id, payment_date, amount) VALUES
+(1, '2025-08-20', 267.21),
+(2, '2025-09-21', 360.50),
+(3, '2025-10-12', 678.23),
+(4, '2025-08-07', 333.33),
+(5, '2025-04-20', 2567.67);
+GO
+
+
+-- CustomerEmployee
+INSERT INTO CustomerEmployee (customer_id, employee_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
+GO
+
+-- EmployeeAddress
+INSERT INTO EmployeeAddress (employee_id, address_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
+GO

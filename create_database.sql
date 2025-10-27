@@ -1,215 +1,202 @@
-
---  DATABASE: SKS_NationalBank
-
-DROP DATABASE IF EXISTS SKS_NationalBank;
+-- Delete the existing database
+DROP DATABASE IF EXISTS SKSNationalBankDB;
 GO
 
-CREATE DATABASE SKS_NationalBank;
+-- Create new database
+CREATE DATABASE SKSNationalBankDB;
 GO
-USE SKS_NationalBank;
+
+USE SKSNationalBankDB;
 GO
 
 
--- ADDRESS
+--Creating Table for SKS Database
 
+-- Address
 CREATE TABLE Address (
-    Address_ID INT IDENTITY(1,1) PRIMARY KEY,
-    Street VARCHAR(100) NOT NULL,
-    City VARCHAR(100) NOT NULL,
-    Province VARCHAR(100) NOT NULL
+    address_id INT PRIMARY KEY,
+    street VARCHAR(100),
+    city VARCHAR(50),
+    province VARCHAR(50)
 );
+GO
 
-
--- BRANCH
-
+-- Branch
 CREATE TABLE Branch (
-    Branch_ID INT IDENTITY(1,1) PRIMARY KEY,
-    BranchName VARCHAR(100) NOT NULL,
-    Address_ID INT NOT NULL,
-    TotalDeposit DECIMAL(15,2) DEFAULT 0,
-    TotalLoans DECIMAL(15,2) DEFAULT 0,
+    branch_id VARCHAR(10) PRIMARY KEY,
+    branch_name VARCHAR(100),
+    address_id INT,
+    total_deposit DECIMAL(15,2),
+    total_loans DECIMAL(15,2),
 
-    CONSTRAINT fk_Branch_Address
-        FOREIGN KEY (Address_ID) REFERENCES Address(Address_ID)
+    CONSTRAINT FK_Branch_Address
+    FOREIGN KEY (address_id)
+    REFERENCES Address(address_id)
 );
+GO
 
-
--- EMPLOYEE
-
+-- Employee
 CREATE TABLE Employee (
-    Employee_ID INT IDENTITY(1,1) PRIMARY KEY,
-    FirstName VARCHAR(100) NOT NULL,
-    LastName VARCHAR(100) NOT NULL,
-    StartDate DATE NOT NULL,
-    Manager_ID INT NULL,
-    Branch_ID INT NOT NULL,
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    start_date DATE,
+    manager_id INT NULL,
+    branch_id VARCHAR(10),
 
-    CONSTRAINT fk_Employee_Manager
-        FOREIGN KEY (Manager_ID) REFERENCES Employee(Employee_ID),
+    CONSTRAINT FK_Employee_Manager
+    FOREIGN KEY (manager_id)
+    REFERENCES Employee(employee_id),
 
-    CONSTRAINT fk_Employee_Branch
-        FOREIGN KEY (Branch_ID) REFERENCES Branch(Branch_ID)
+    CONSTRAINT FK_Employee_Branch
+    FOREIGN KEY (branch_id)
+    REFERENCES Branch(branch_id)
 );
+GO
 
-
--- EMPLOYEEADDRESS
-
-CREATE TABLE EmployeeAddress (
-    Employee_ID INT NOT NULL,
-    Address_ID INT NOT NULL,
-
-    CONSTRAINT pk_EmployeeAddress
-        PRIMARY KEY (Employee_ID, Address_ID),
-
-    CONSTRAINT fk_EmployeeAddress_Employee
-        FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID),
-
-    CONSTRAINT fk_EmployeeAddress_Address
-        FOREIGN KEY (Address_ID) REFERENCES Address(Address_ID)
+-- AccountType
+CREATE TABLE AccountType (
+    account_type_id INT PRIMARY KEY,
+    type VARCHAR(50)
 );
+GO
 
-
--- CUSTOMER
-
-CREATE TABLE Customer (
-    Customer_ID INT IDENTITY(1,1) PRIMARY KEY,
-    FirstName VARCHAR(100) NOT NULL,
-    LastName VARCHAR(100) NOT NULL
-);
-
-
--- CUSTOMERADDRESS (M:N)
-
-CREATE TABLE CustomerAddress (
-    Customer_ID INT NOT NULL,
-    Address_ID INT NOT NULL,
-
-    CONSTRAINT pk_CustomerAddress
-        PRIMARY KEY (Customer_ID, Address_ID),
-
-    CONSTRAINT fk_CustomerAddress_Customer
-        FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
-
-    CONSTRAINT fk_CustomerAddress_Address
-        FOREIGN KEY (Address_ID) REFERENCES Address(Address_ID)
-);
-
-
--- ACCOUNT
-
+-- Account
 CREATE TABLE Account (
-    Account_ID INT IDENTITY(1,1) PRIMARY KEY,
-    AccountType VARCHAR(50) NOT NULL
-        CONSTRAINT chk_AccountType CHECK (AccountType IN ('Savings', 'Chequing')),
-    Balance DECIMAL(15,2) DEFAULT 0,
-    OpenDate DATE NOT NULL,
-    Customer_ID INT NULL,
+    account_id INT PRIMARY KEY,
+    account_type_id INT,
+    balance DECIMAL(15,2),
+    open_date DATE,
 
-    CONSTRAINT fk_Account_Customer
-        FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+    CONSTRAINT FK_Account_AccountType
+    FOREIGN KEY (account_type_id)
+    REFERENCES AccountType(account_type_id)
 );
+GO
 
+-- Customer
+CREATE TABLE Customer (
+    customer_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    address_id INT,
 
--- ACCOUNTHOLDER 
-
-CREATE TABLE AccountHolder (
-    Account_ID INT NOT NULL,
-    Customer_ID INT NOT NULL,
-
-    CONSTRAINT pk_AccountHolder
-        PRIMARY KEY (Account_ID, Customer_ID),
-
-    CONSTRAINT fk_AccountHolder_Account
-        FOREIGN KEY (Account_ID) REFERENCES Account(Account_ID),
-
-    CONSTRAINT fk_AccountHolder_Customer
-        FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+    CONSTRAINT FK_Customer_Address
+    FOREIGN KEY (address_id)
+    REFERENCES Address(address_id)
 );
+GO
 
+-- CustomerAccount 
+CREATE TABLE CustomerAccount (
+    customer_id INT,
+    account_id INT,
+    PRIMARY KEY (customer_id, account_id),
 
--- SAVINGS ACCOUNT 
+    CONSTRAINT FK_CustomerAccount_Customer
+    FOREIGN KEY (customer_id)
+    REFERENCES Customer(customer_id),
 
+    CONSTRAINT FK_CustomerAccount_Account
+    FOREIGN KEY (account_id)
+    REFERENCES Account(account_id)
+);
+GO
+
+-- SavingsAccount
 CREATE TABLE SavingsAccount (
-    Account_ID INT PRIMARY KEY,
-    InterestRate DECIMAL(5,2) NOT NULL
-        CONSTRAINT chk_InterestRate CHECK (InterestRate >= 0),
+    account_id INT PRIMARY KEY,
+    interest_rate DECIMAL(5,2),
 
-    CONSTRAINT fk_SavingsAccount_Account
-        FOREIGN KEY (Account_ID) REFERENCES Account(Account_ID)
+    CONSTRAINT FK_SavingsAccount_Account
+    FOREIGN KEY (account_id)
+    REFERENCES Account(account_id)
 );
+GO
 
+-- ChequingAccount
+CREATE TABLE ChequingAccount (
+    account_id INT PRIMARY KEY,
+    overdraft_limit DECIMAL(10,2),
 
--- CHEQUING OVERDRAFT 
-
-CREATE TABLE ChequingOverdraft (
-    Account_ID INT PRIMARY KEY,
-    OverdraftLimit DECIMAL(15,2) NOT NULL
-        CONSTRAINT chk_OverdraftLimit CHECK (OverdraftLimit >= 0),
-
-    CONSTRAINT fk_ChequingOverdraft_Account
-        FOREIGN KEY (Account_ID) REFERENCES Account(Account_ID)
+    CONSTRAINT FK_ChequingAccount_Account
+    FOREIGN KEY (account_id)
+    REFERENCES Account(account_id)
 );
+GO
 
-
--- LOAN
-
+-- Loan
 CREATE TABLE Loan (
-    Loan_ID INT IDENTITY(1,1) PRIMARY KEY,
-    LoanType VARCHAR(50) NOT NULL,
-    Amount DECIMAL(15,2) NOT NULL
-        CONSTRAINT chk_LoanAmount CHECK (Amount > 0),
-    InterestRate DECIMAL(5,2) NOT NULL
-        CONSTRAINT chk_LoanInterest CHECK (InterestRate >= 0),
-    StartDate DATE NOT NULL,
-    EndDate DATE NULL
+    loan_id INT PRIMARY KEY,
+    amount DECIMAL(15,2),
+    interest_rate DECIMAL(5,2),
+    start_date DATE,
+    end_date DATE,
+    account_id INT,
+
+    CONSTRAINT FK_Loan_Account
+    FOREIGN KEY (account_id)
+    REFERENCES Account(account_id)
 );
+GO
 
-
--- LOANHOLDER 
-
-CREATE TABLE LoanHolder (
-    Loan_ID INT NOT NULL,
-    Customer_ID INT NOT NULL,
-
-    CONSTRAINT pk_LoanHolder
-        PRIMARY KEY (Loan_ID, Customer_ID),
-
-    CONSTRAINT fk_LoanHolder_Loan
-        FOREIGN KEY (Loan_ID) REFERENCES Loan(Loan_ID),
-
-    CONSTRAINT fk_LoanHolder_Customer
-        FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
-);
-
-
--- LOANPAYMENT
-
+-- LoanPayment
 CREATE TABLE LoanPayment (
-    Loan_ID INT NOT NULL,
-    PaymentDate DATE NOT NULL,
-    Amount DECIMAL(15,2) NOT NULL
-        CONSTRAINT chk_PaymentAmount CHECK (Amount > 0),
+    loan_id INT,
+    payment_date DATE,
+    amount DECIMAL(15,2),
+    PRIMARY KEY (loan_id, payment_date),
 
-    CONSTRAINT pk_LoanPayment
-        PRIMARY KEY (Loan_ID, PaymentDate),
-
-    CONSTRAINT fk_LoanPayment_Loan
-        FOREIGN KEY (Loan_ID) REFERENCES Loan(Loan_ID)
+    CONSTRAINT FK_LoanPayment_Loan
+    FOREIGN KEY (loan_id)
+    REFERENCES Loan(loan_id)
 );
+GO
 
+-- LoanHolder 
+CREATE TABLE LoanHolder (
+    loan_id INT,
+    customer_id INT,
+    PRIMARY KEY (loan_id, customer_id),
 
--- CUSTOMEREMPLOYEE
+    CONSTRAINT FK_LoanHolder_Loan
+    FOREIGN KEY (loan_id)
+    REFERENCES Loan(loan_id),
 
+    CONSTRAINT FK_LoanHolder_Customer
+    FOREIGN KEY (customer_id)
+    REFERENCES Customer(customer_id)
+);
+GO
+
+-- CustomerEmployee 
 CREATE TABLE CustomerEmployee (
-    Customer_ID INT NOT NULL,
-    Employee_ID INT NOT NULL,
+    customer_id INT,
+    employee_id INT,
+    PRIMARY KEY (customer_id, employee_id),
 
-    CONSTRAINT pk_CustomerEmployee
-        PRIMARY KEY (Customer_ID, Employee_ID),
+    CONSTRAINT FK_CustomerEmployee_Customer
+    FOREIGN KEY (customer_id)
+    REFERENCES Customer(customer_id),
 
-    CONSTRAINT fk_CustomerEmployee_Customer
-        FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
-
-    CONSTRAINT fk_CustomerEmployee_Employee
-        FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID)
+    CONSTRAINT FK_CustomerEmployee_Employee
+    FOREIGN KEY (employee_id)
+    REFERENCES Employee(employee_id)
 );
+GO
+
+-- EmployeeAddress 
+CREATE TABLE EmployeeAddress (
+    employee_id INT,
+    address_id INT,
+    PRIMARY KEY (employee_id, address_id),
+
+    CONSTRAINT FK_EmployeeAddress_Employee
+    FOREIGN KEY (employee_id)
+    REFERENCES Employee(employee_id),
+
+    CONSTRAINT FK_EmployeeAddress_Address
+    FOREIGN KEY (address_id)
+    REFERENCES Address(address_id)
+);
+GO
