@@ -11,7 +11,7 @@ It includes scripts to create the database, populate it with sample data, and ru
 
 * **create_database.sql** – Creates all tables, relationships, and constraints.
 * **populate_database.sql** – Inserts sample data for all tables.
-* **prepared_queries.sql** – Contains 12 stored procedures and 1 function for testing and reporting.
+* **prepared_queries.sql** – Contains 10 stored procedures and 1 function for testing and reporting.
 
 ---
 
@@ -48,8 +48,7 @@ Main tables include:
 8. **GetAverageBalanceByType** *(Function)* – Returns average balance by account type.
 9. **SearchCustomerByLastName** – Finds customers by last name (partial match).
 10. **GetEmployeesAfterDate** – Lists employees hired after a certain date.
-11. **GetTotalLoansByBranch** – Shows total loan amount and average interest rate per branch.
-12. **GetCustomerLoanDetails** – Displays each customer’s loan, amount, rate, and last payment info.
+
 
 ---
 
