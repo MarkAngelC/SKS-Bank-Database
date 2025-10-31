@@ -1,3 +1,12 @@
+--Group K
+--Mark Castro
+--Derek Carlos
+--Jeshua Arias Santos
+
+
+
+
+
 -- Delete the existing database
 DROP DATABASE IF EXISTS SKSNationalBankDB;
 GO

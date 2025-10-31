@@ -1,3 +1,10 @@
+--Group K
+--Mark Castro
+--Derek Carlos
+--Jeshua Arias Santos
+
+
+
 USE SKSNationalBankDB;
 GO
 

@@ -1,9 +1,16 @@
-﻿
+﻿--Group K
+--Mark Castro
+--Derek Carlos
+--Jeshua Arias Santos
+
+
+
+
 USE SKSNationalBankDB;
 GO
 
 -- this procedure returns the accounts and balances of a given customer
-CREATE PROCEDURE GetCustomerAccounts
+CREATE PROCEDURE CustomerAccounts
     @CustomerID INT
 AS
 BEGIN
@@ -17,7 +24,7 @@ END;
 GO
 
 -- test
-EXEC GetCustomerAccounts @CustomerID = 1;
+EXEC CustomerAccounts @CustomerID = 1;
 GO
 
 
@@ -72,40 +79,54 @@ EXEC UpdateAccountBalance @AccountID = 2, @Amount = 200.00;
 GO
 
 
--- adds a record in CustomerAccount table
-CREATE PROCEDURE AddCustomerAccount
-    @CustomerID INT,
-    @AccountID INT
+-- shows total loan amount and average interest rate per branch
+CREATE PROCEDURE GetTotalLoansByBranch
 AS
 BEGIN
-    INSERT INTO CustomerAccount (customer_id, account_id)
-    VALUES (@CustomerID, @AccountID);
-END;
-GO
-
--- test
-EXEC AddCustomerAccount @CustomerID = 3, @AccountID = 4;
-GO
-
-
--- counts customers by their branch through linked employees
-CREATE PROCEDURE GetCustomerCountPerBranch
-AS
-BEGIN
-    SELECT B.branch_name, COUNT(DISTINCT C.customer_id) AS total_customers
+    SELECT 
+        B.branch_name,
+        SUM(L.amount) AS total_loan_amount,
+        AVG(L.interest_rate) AS avg_interest_rate
     FROM Branch B
     JOIN Employee E ON B.branch_id = E.branch_id
-    JOIN CustomerAccount CA ON CA.customer_id IN (
-        SELECT customer_id FROM Customer
+    JOIN Account A ON A.account_id IN (
+        SELECT account_id FROM Loan
     )
-    JOIN Account A ON CA.account_id = A.account_id
+    JOIN Loan L ON A.account_id = L.account_id
     GROUP BY B.branch_name;
 END;
 GO
 
 -- test
-EXEC GetCustomerCountPerBranch;
+EXEC GetTotalLoansByBranch;
 GO
+
+
+
+-- shows detailed loan information for each customer
+CREATE PROCEDURE GetCustomerLoanDetails
+AS
+BEGIN
+    SELECT 
+        C.first_name,
+        C.last_name,
+        L.loan_id,
+        L.amount AS loan_amount,
+        L.interest_rate,
+        LP.payment_date,
+        LP.amount AS last_payment
+    FROM Customer C
+    JOIN LoanHolder LH ON C.customer_id = LH.customer_id
+    JOIN Loan L ON LH.loan_id = L.loan_id
+    LEFT JOIN LoanPayment LP ON L.loan_id = LP.loan_id
+    ORDER BY C.customer_id, L.loan_id;
+END;
+GO
+
+-- test
+EXEC GetCustomerLoanDetails;
+GO
+
 
 
 -- lists customers ordered by their total balance
