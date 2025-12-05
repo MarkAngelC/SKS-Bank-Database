@@ -1,16 +1,11 @@
---Group K
---Mark Castro
---Derek Carlos
---Jeshua Arias Santos
+-- Group K
+-- Mark Castro
+-- Derek Carlos
+-- Jeshua Arias Santos
 
-
-
-USE SKSNationalBankDB;
-GO
-
-
---Address Populate
-INSERT INTO Address (address_id, street, city, province) VALUES
+--Populate DATA
+-- Address
+INSERT INTO Address VALUES
 (1, '414 3 St SW', 'Calgary', 'AB'),
 (2, '8500 Macleod Trail SE', 'Calgary', 'AB'),
 (3, '407 2 Street SW', 'Calgary', 'AB'),
@@ -18,8 +13,17 @@ INSERT INTO Address (address_id, street, city, province) VALUES
 (5, '10 Copperstone St SE', 'Calgary', 'AB');
 GO
 
---Branch Populate
-INSERT INTO Branch (branch_id, branch_name, address_id, total_deposit, total_loans) VALUES
+-- BankOffice
+INSERT INTO BankOffice VALUES
+(1, 'Central Office', 1),
+(2, 'South Support Office', 2),
+(3, 'North Operations Office', 3),
+(4, 'West Admin Office', 4),
+(5, 'East Financial Office', 5);
+GO
+
+-- Branch
+INSERT INTO Branch VALUES
 ('B001', 'Calgary Financial Centre', 1, 100, 100),
 ('B002', '17th Ave. SE & Radisson', 2, 42, 37),
 ('B003', 'The Meadows', 3, 67, 21),
@@ -27,24 +31,46 @@ INSERT INTO Branch (branch_id, branch_name, address_id, total_deposit, total_loa
 ('B005', 'Timberlands', 5, 35, 28);
 GO
 
---Employee 
-INSERT INTO Employee (employee_id, first_name, last_name, start_date, manager_id, branch_id) VALUES
-(1, 'Liam', 'Morales', '2021-10-04', NULL, 'B001'),
-(2, 'Camila', 'Kelly', '2017-05-06', 1, 'B001'),
-(3, 'Gabriel', 'Allen', '2015-09-01', 1, 'B002'),
-(4, 'Quinn', 'Young', '2020-03-27', 3, 'B004'),
-(5, 'Lydia', 'Parker', '2023-11-14', 2, 'B003');
+-- EmployeeRole
+INSERT INTO EmployeeRole VALUES
+(1, 'Branch Manager'),
+(2, 'Financial Advisor'),
+(3, 'Teller'),
+(4, 'Loan Specialist'),
+(5, 'Customer Service Representative');
 GO
 
---Account Type
-INSERT INTO AccountType (account_type_id, type) VALUES
+-- Employee
+INSERT INTO Employee VALUES
+(1, 'Liam', 'Morales', '2021-10-04', NULL, 'B001', 1, 1, 1),
+(2, 'Camila', 'Kelly', '2017-05-06', 1, 'B001', 1, 2, 2),
+(3, 'Gabriel', 'Allen', '2015-09-01', 1, 'B002', 2, 3, 3),
+(4, 'Quinn', 'Young', '2020-03-27', 3, 'B004', 4, 4, 3),
+(5, 'Lydia', 'Parker', '2023-11-14', 2, 'B003', 3, 5, 5);
+GO
+
+-- Customer
+INSERT INTO Customer VALUES
+(1, 'Liam', 'Morales', 1, 1),
+(2, 'Delphine', 'Crona', 2, 2),
+(3, 'Gunnar', 'Padberg', 3, 3),
+(4, 'Emil', 'Sauer', 4, 4),
+(5, 'Brendan', 'Bartell', 5, 5),
+(6, 'Isabell', 'Schmidt', 2, 1),
+(7, 'Ottis', 'Heidenreich', 3, 2),
+(8, 'Oswald', 'Mante', 5, 3),
+(9, 'Monica', 'Koelpin', 1, 4),
+(10, 'Dean', 'Grady', 4, 5);
+GO
+
+-- AccountType
+INSERT INTO AccountType VALUES
 (1, 'Chequing'),
 (2, 'Savings');
 GO
 
---Account
-
-INSERT INTO Account (account_id, account_type_id, balance, open_date) VALUES
+-- Account
+INSERT INTO Account VALUES
 (1, 2, 6000.00, '2025-05-06'),
 (2, 1, 1570.76, '2025-09-28'),
 (3, 2, 2367.98, '2025-01-26'),
@@ -57,37 +83,14 @@ INSERT INTO Account (account_id, account_type_id, balance, open_date) VALUES
 (10, 2, 2213.67, '2025-04-20');
 GO
 
---Customer
-INSERT INTO Customer (customer_id, first_name, last_name, address_id) VALUES
-(1, 'Liam', 'Morales', 1),
-(2, 'Delphine', 'Crona', 2),
-(3, 'Gunnar', 'Padberg', 3),
-(4, 'Emil', 'Sauer', 4),
-(5, 'Brendan', 'Bartell', 5),
-(6, 'Isabell', 'Schmidt', 1),
-(7, 'Ottis', 'Heidenreich', 2),
-(8, 'Oswald', 'Mante', 3),
-(9, 'Monica', 'Koelpin', 4),
-(10, 'Dean', 'Grady', 5);
+-- CustomerAccount
+INSERT INTO CustomerAccount VALUES
+(1, 1), (2, 2), (3, 4), (4, 10), (5, 5),
+(6, 8), (7, 6), (8, 9), (9, 7), (10, 3);
 GO
-
---CustomerAccount
-INSERT INTO CustomerAccount (customer_id, account_id) VALUES
-(1, 1),
-(2, 2),
-(3, 4),
-(4, 10),
-(5, 5),
-(6, 8),
-(7, 6),
-(8, 9),
-(9, 7),
-(10, 3);
-GO
-
 
 -- SavingsAccount
-INSERT INTO SavingsAccount (account_id, interest_rate) VALUES
+INSERT INTO SavingsAccount VALUES
 (1, 2.65),
 (3, 4.95),
 (6, 3.50),
@@ -95,9 +98,8 @@ INSERT INTO SavingsAccount (account_id, interest_rate) VALUES
 (10, 1.45);
 GO
 
-
 -- ChequingAccount
-INSERT INTO ChequingAccount (account_id, overdraft_limit) VALUES
+INSERT INTO ChequingAccount VALUES
 (2, 385.12),
 (4, 764.12),
 (5, 546.93),
@@ -105,19 +107,26 @@ INSERT INTO ChequingAccount (account_id, overdraft_limit) VALUES
 (9, 221.49);
 GO
 
-
--- Loan
-INSERT INTO Loan (loan_id, amount, interest_rate, start_date, end_date, account_id) VALUES
-(1, 1671.89, 3.5, '2025-01-01', '2025-12-31', 1),
-(2, 934.78, 4.0, '2025-03-01', '2025-09-30', 3),
-(3, 1876.21, 2.9, '2025-02-15', '2025-10-15', 6),
-(4, 1250.00, 3.2, '2025-04-01', '2025-11-01', 8),
-(5, 3000.00, 5.0, '2025-05-01', '2026-05-01', 10);
+-- OverDraft
+INSERT INTO OverDraft VALUES
+(2, '2025-01-10', 120, 1001),
+(4, '2025-02-14', 320, 1002),
+(5, '2025-03-18', 90, 1003),
+(7, '2025-04-20', 140, 1004),
+(9, '2025-05-25', 50, 1005);
 GO
 
+-- Loan
+INSERT INTO Loan VALUES
+(1, 1671.89, 3.5, '2025-01-01', '2025-12-31'),
+(2, 934.78, 4.0, '2025-03-01', '2025-09-30'),
+(3, 1876.21, 2.9, '2025-02-15', '2025-10-15'),
+(4, 1250.00, 3.2, '2025-04-01', '2025-11-01'),
+(5, 3000.00, 5.0, '2025-05-01', '2026-05-01');
+GO
 
 -- LoanHolder
-INSERT INTO LoanHolder (loan_id, customer_id) VALUES
+INSERT INTO LoanHolder VALUES
 (1, 9),
 (2, 1),
 (3, 3),
@@ -125,31 +134,11 @@ INSERT INTO LoanHolder (loan_id, customer_id) VALUES
 (5, 6);
 GO
 
-
 -- LoanPayment
-INSERT INTO LoanPayment (loan_id, payment_date, amount) VALUES
-(1, '2025-08-20', 267.21),
-(2, '2025-09-21', 360.50),
-(3, '2025-10-12', 678.23),
-(4, '2025-08-07', 333.33),
-(5, '2025-04-20', 2567.67);
-GO
-
-
--- CustomerEmployee
-INSERT INTO CustomerEmployee (customer_id, employee_id) VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5);
-GO
-
--- EmployeeAddress
-INSERT INTO EmployeeAddress (employee_id, address_id) VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5);
+INSERT INTO LoanPayment VALUES
+(1, 1, 1, '2025-08-20', 267.21),
+(2, 2, 1, '2025-09-21', 360.50),
+(3, 3, 1, '2025-10-12', 678.23),
+(4, 4, 1, '2025-08-07', 333.33),
+(5, 5, 1, '2025-04-20', 2567.67);
 GO
